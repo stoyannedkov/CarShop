@@ -1,0 +1,192 @@
+package h11;
+
+public interface IVehicle {
+	void startMovement();
+	void stopMovement();
+}
+
+package h11;
+
+public abstract class Car implements IVehicle{
+	private double doubleMaxSpeed;
+	private double currentSpeed;
+	private double price;
+	
+	public void startMovement(){
+		startEngine();
+		accelerate();
+	}
+	
+	public void stopMovement(){
+		stopCar();
+		stopEngine();
+	}
+	
+	public void startEngine(){
+		System.out.println("Engine started");
+	}
+	public void stopEngine(){
+		System.out.println("Engine stopped");
+	}
+	public abstract void accelerate();
+	public abstract void stopCar();
+	
+}
+
+
+package h11;
+
+public class FamilyCar extends Car{
+
+	@Override
+	public void accelerate() {
+		System.out.println("Family car is accelerating");	
+	}
+
+	@Override
+	public void stopCar() {
+		System.out.println("Family car is stopping");
+	}
+
+}
+
+package h11;
+
+public class SportCar extends Car {
+
+	@Override
+	public void accelerate() {
+		System.out.println("Sport car is accelerating");
+
+	}
+
+	@Override
+	public void stopCar() {
+		System.out.println("Sports car is stopping");
+	}
+
+}
+
+package h11;
+
+public class WagonCar extends Car {
+
+	@Override
+	public void accelerate() {
+		System.out.println("Wagon car is accelerating");
+
+	}
+
+	@Override
+	public void stopCar() {
+		System.out.println("Wagon car is stopping");
+	}
+
+}
+
+package h11;
+
+public class CarShop {
+	Car[] cars = new Car[5];
+	int carsCount = 0;
+
+	int sportsCarCnt = 0;
+	int wagonCarCnt = 0;
+	int familyCarCnt = 0;
+
+	SportCar[] getSportCars() {
+		int sportCarCnt = 0;
+		for (int i = 0; i < carsCount; i++) {
+			if (cars[i] instanceof SportCar) {
+				sportCarCnt++;
+			}
+		}
+		SportCar[] scars = new SportCar[sportCarCnt];
+		for (int i = 0; i < carsCount; i++) {
+			if (cars[i] instanceof SportCar) {
+				scars[scars.length - sportCarCnt] = (SportCar) cars[i];
+				sportCarCnt--;
+			}
+		}
+		return scars;
+
+	}
+
+	WagonCar[] getWagonCars() {
+		WagonCar[] wcars = new WagonCar[wagonCarCnt];
+		int tmp = 0;
+		for (int i = 0; i < carsCount; i++) {
+			if (cars[i] instanceof WagonCar) {
+				wcars[tmp] = (WagonCar)cars[i];
+				tmp++;
+			}
+		}
+		return wcars;
+	}
+
+	FamilyCar[] getFamilyCars() {
+		FamilyCar[] fcars = new FamilyCar[familyCarCnt];
+		int tmp = 0;
+		for (int i = 0; i < carsCount; i++) {
+			if (cars[i] instanceof FamilyCar) {
+				fcars[tmp] = (FamilyCar)cars[i];
+				tmp++;
+			}
+		}
+		return fcars;
+	}
+
+	public void addCar(Car car) {
+		cars[carsCount] = car;
+		if (car instanceof SportCar) {
+			this.sportsCarCnt++;
+		} else if (car instanceof WagonCar) {
+			this.wagonCarCnt++;
+		} else if (car instanceof FamilyCar) {
+			this.familyCarCnt++;
+		}
+		carsCount++;
+		if (carsCount >= 0.8 * cars.length) {
+			Car[] tmp = new Car[(int) Math.ceil(cars.length * 1.2)];
+			for (int i = 0; i < cars.length; i++) {
+				tmp[i] = cars[i];
+			}
+			cars = tmp;
+		}
+	}
+
+}
+
+
+package h11;
+
+public class CarDemo {
+	public static void main(String[] args) {
+		FamilyCar fcar = new FamilyCar();
+		WagonCar wcar = new WagonCar();
+		SportCar scar = new SportCar();
+		
+		scar.startMovement();
+		scar.stopMovement();
+		wcar.startMovement();
+		wcar.stopMovement();
+		fcar.startMovement();
+		fcar.stopMovement();
+		
+		CarShop carShop = new CarShop();
+		carShop.addCar(scar);
+		carShop.addCar(scar);
+		carShop.addCar(fcar);
+		carShop.addCar(fcar);
+		carShop.addCar(fcar);
+		carShop.addCar(wcar);
+		carShop.addCar(wcar);
+		carShop.addCar(wcar);
+		carShop.addCar(wcar);
+		
+		System.out.println(carShop.getFamilyCars().length);
+		System.out.println(carShop.getSportCars().length);
+		System.out.println(carShop.getWagonCars().length);
+		
+	}
+}
